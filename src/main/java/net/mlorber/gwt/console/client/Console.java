@@ -111,7 +111,7 @@ public class Console implements HasWidgets {
 		}
 	}
 
-	public static Console getInstance() {
+	public static Console get() {
 		return instance;
 	}
 
@@ -154,7 +154,7 @@ public class Console implements HasWidgets {
 
 	// FIXME root ?
 	public void registerToRootLogger() {
-		Handler handler = new HasWidgetsLogHandler(Console.getInstance());
+		Handler handler = new HasWidgetsLogHandler(Console.get());
 		Logger.getLogger("").addHandler(handler);
 		// FIXME test !
 		// handler.setFormatter(new TextFormatter());
@@ -323,6 +323,6 @@ public class Console implements HasWidgets {
 
 	// FIXME new instance each time ?
 	public Handler createHandler() {
-		return new HasWidgetsLogHandler(Console.getInstance());
+		return new HasWidgetsLogHandler(Console.get());
 	}
 }
