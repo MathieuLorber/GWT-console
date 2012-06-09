@@ -23,7 +23,7 @@ The console is for development purpose.
 It's a handler for [log API](https://developers.google.com/web-toolkit/doc/latest/DevGuideLogging), more convenient than the default console handler.
 Furthermore, it gives you the ability to :
 * manually log informations
-* embed test widgets without disrupt interface
+* embed test widgets without disrupting application interface
 * display notifications
 The console can be moved and resized.
 
