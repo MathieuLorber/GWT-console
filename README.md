@@ -6,6 +6,7 @@ A console for GWT logging and notifications.
 #### HOW-TO
 
 1) Add jar in your dependencies ([jar file here](http://www.mlorber.net/maven_repo/net/mlorber/gwt/console/1.0/console-1.0.jar), below for Maven).
+
 2) Add inherence in your gwt.xml file :
 
 	<inherits name='net.mlorber.gwt.console.Console' />
