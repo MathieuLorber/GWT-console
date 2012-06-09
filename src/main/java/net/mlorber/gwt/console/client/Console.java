@@ -59,7 +59,7 @@ public class Console implements HasWidgets {
 	private Integer popupLeftPosition;
 	private Integer popupTopPosition;
 
-	private Level notifyLevel;
+	private Level notifyLevel = Level.ALL;
 
 	private NotificationWidget notificationWidget;
 
@@ -98,17 +98,21 @@ public class Console implements HasWidgets {
 		});
 	}
 
-	public void quickInit(boolean registerToRootLogger, Level notifyLevel, boolean registerShorcut, boolean addSwitchButtonOnTopRight) {
+	public void quickInit(boolean registerToRootLogger, boolean registerShorcut, boolean addSwitchButtonOnTopRight) {
 		if (registerToRootLogger) {
 			registerToRootLogger();
 		}
-		this.notifyLevel = notifyLevel;
 		if (registerShorcut) {
 			registerShorcut();
 		}
 		if (addSwitchButtonOnTopRight) {
 			addSwitchButtonOnTopRight();
 		}
+	}
+
+	public void quickInit(boolean registerToRootLogger, Level notifyLevel, boolean registerShorcut, boolean addSwitchButtonOnTopRight) {
+		quickInit(registerToRootLogger, registerShorcut, addSwitchButtonOnTopRight);
+		this.notifyLevel = notifyLevel;
 	}
 
 	public static Console get() {

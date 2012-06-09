@@ -21,6 +21,7 @@ public class NotificationWidget extends Composite {
 		final Label notificationLabel = new Label(notification);
 		panel.add(notificationLabel);
 		panel.getElement().getStyle().setDisplay(Display.BLOCK);
+		// TODO conf timer
 		new Timer() {
 			@Override
 			public void run() {
