@@ -43,7 +43,7 @@ public class Console implements HasWidgets {
 	private static final String CSS_SCROLLPANEL = "background: #eee;margin: 2px 2px 12px 2px;color: #000;";
 	private static final String CSS_RESIZE_IMAGE = "position: absolute;bottom: 4px;right: 4px;cursor:nw-resize;";
 	private static final String CSS_CLOSE_LABEL = "position: absolute;top: 0;right: 5px;cursor:pointer;";
-	private static final String CSS_SWITCH_BUTTON = "position: absolute;top: 0;right: 0;";
+	private static final String CSS_SWITCH_BUTTON = "position: absolute;top: 0;right: 0;z-index: 2000;";
 	private static final String CSS_LOG_PANEL = "background: #fff;margin: 1px;border: 1px solid #ddd;";
 	// FIXME sixe problem
 	private static final String CSS_LOG_DISCLOSURE_PANEL = "background: #fff;margin: 1px;border: 1px solid #ddd;";
