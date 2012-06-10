@@ -1,0 +1,116 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Gwt-console by MathieuLorber</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Gwt-console</h1>
+        <p>A console for GWT logging, for notifications, ...</p>
+        <p class="view"><a href="https://github.com/MathieuLorber/GWT-console">View the Project on GitHub <small>MathieuLorber/GWT-console</small></a></p>
+        <ul>
+          <li><a href="https://github.com/MathieuLorber/GWT-console/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/MathieuLorber/GWT-console/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/MathieuLorber/GWT-console">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h2>WHY ?</h2>
+
+<p>The console is for development purpose.
+It's a handler for <a href="https://developers.google.com/web-toolkit/doc/latest/DevGuideLogging">log API</a>, more convenient than the default console handler.
+Furthermore, it gives you the ability to :</p>
+
+<ul>
+<li>manually log informations</li>
+<li>embed test widgets without disrupting application interface</li>
+<li>display notifications
+The console can be moved and resized.</li>
+</ul><h2>HOW-TO</h2>
+
+<p>1) Add jar in your dependencies (<a href="http://www.mlorber.net/maven_repo/net/mlorber/gwt/console/1.0/console-1.0.jar">jar file here</a>, below for Maven).</p>
+
+<p>2) Add inherence in your gwt.xml file :</p>
+
+<pre><code>&lt;inherits name='net.mlorber.gwt.console.Console' /&gt;
+</code></pre>
+
+<p>3) In your GWT code :</p>
+
+<pre><code>Console.get().quickInit(true, true, true);
+</code></pre>
+
+<p>You can build the library with Maven (mvn install)</p>
+
+<h2>CONSOLE API</h2>
+
+<pre><code>// Init
+Console.get().quickInit(boolean registerToRootLogger, Level notifyLevel, boolean registerShorcut, boolean addSwitchButtonOnTopRight);
+    registerToRootLogger is pretty well named
+    registerShorcut : if true, shift + alt + C will show/hide the console
+    addSwitchButtonOnTopRight : if true, a show/hide button will be displayed at the top-right of the screen
+
+// Log
+Console.get().log(String logMessage, String messageTitle);
+    message and title can be HTML (beware XSS !)
+
+Console.get().notify(String message);
+    notification is displayed 5 seconds at the top right of the screen
+
+Console.get().add(Widget widget);
+    allows to embed test widgets (to manually fire an event for example)
+</code></pre>
+
+<h2>MISC</h2>
+
+<p>Use GWT.isProd() to only use it in development.</p>
+
+<h2>MAVEN DEPENDENCY</h2>
+
+<pre><code>&lt;dependencies&gt;
+    [...]
+    &lt;dependency&gt;
+        &lt;groupId&gt;net.mlorber.gwt&lt;/groupId&gt;
+        &lt;artifactId&gt;console&lt;/artifactId&gt;
+        &lt;version&gt;1.0&lt;/version&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;
+
+&lt;repositories&gt;
+    [...]
+    &lt;repository&gt;
+        &lt;id&gt;GWT console repo&lt;/id&gt;
+        &lt;url&gt;http://www.mlorber.net/maven_repo&lt;/url&gt;
+    &lt;/repository&gt;
+&lt;repositories&gt;
+</code></pre>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/MathieuLorber">MathieuLorber</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA–32530744–1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
