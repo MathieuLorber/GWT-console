@@ -32,7 +32,6 @@ class ConsoleConfiguration {
 	public ConsoleConfiguration(String cookieName) {
 		this.cookieName = cookieName;
 		String configurationCookieString = Cookies.getCookie(cookieName);
-		System.out.println("làaaaaaaa : " + configurationCookieString);
 		if (configurationCookieString != null) {
 			json = (JSONObject) JSONParser.parseLenient(configurationCookieString);
 			// FIXME about cookie format verification
