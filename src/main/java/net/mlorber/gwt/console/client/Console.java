@@ -73,7 +73,6 @@ public class Console {
 	}
 
 	private Console() {
-		popupContainerPanel.hide();
 		StyleHelper.addStyle(popupContainerPanel, CSS_CONSOLE);
 
 		FlowPanel mainPanel = new FlowPanel();
@@ -191,6 +190,7 @@ public class Console {
 			@Override
 			public void onClick(ClickEvent event) {
 				popupContainerPanel.hide();
+				configuration.saveShowConsole(false);
 			}
 		});
 		return closeLabel;
