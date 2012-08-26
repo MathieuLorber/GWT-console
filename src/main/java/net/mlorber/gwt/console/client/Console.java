@@ -1,6 +1,5 @@
 package net.mlorber.gwt.console.client;
 
-import java.util.Date;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -8,14 +7,13 @@ import java.util.logging.Logger;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.event.logical.shared.OpenEvent;
-import com.google.gwt.event.logical.shared.OpenHandler;
+import com.google.gwt.event.dom.client.ScrollEvent;
+import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.logging.client.HasWidgetsLogHandler;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
@@ -24,9 +22,15 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-// TODO choice of save in cookie at runtime
-// TODO handle prodmode / devmode ?
-// TODO better log date format
+// TODO :
+// * choice of save in cookie at runtime
+// * handle prodmode / devmode ?
+// * better log date format
+// * uncatched exceptions
+// * better log lines...
+// * auto notify with LogLevel
+// * implement initAutoScroll
+// * check registerToRootLogger and implement formatter
 public class Console {
 
 	private static final String RESIZE_IMAGE = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA09pVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoMTMuMCAyMDEyMDMwNS5tLjQxNSAyMDEyLzAzLzA1OjIxOjAwOjAwKSAgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6QUNCOEY2QzE4QTA4MTFFMThCOTNCOERBMDkxNjYyODMiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6QUNCOEY2QzI4QTA4MTFFMThCOTNCOERBMDkxNjYyODMiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpBQ0I4RjZCRjhBMDgxMUUxOEI5M0I4REEwOTE2NjI4MyIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpBQ0I4RjZDMDhBMDgxMUUxOEI5M0I4REEwOTE2NjI4MyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pv02MjEAAAA0SURBVHjaYvj//z8DEPcDsT6UDcYwQRB4jyzJAOW8R5OcD9OKLAkGDEhYH5fEfGQJgAADAAm9fbx5gQhKAAAAAElFTkSuQmCC";
@@ -37,9 +41,6 @@ public class Console {
 	private static final String CSS_RESIZE_IMAGE = "position: absolute;bottom: 4px;right: 4px;cursor:nw-resize;";
 	private static final String CSS_CLOSE_LABEL = "position: absolute;top: 0;right: 5px;cursor:pointer;";
 	private static final String CSS_SWITCH_BUTTON = "position: absolute;top: 0;right: 0;z-index: 2000;";
-	// private static final String CSS_LOG_PANEL = "background: #fff;margin: 1px;border: 1px solid #ddd;";
-	// FIXME sixe problem
-	private static final String CSS_LOG_DISCLOSURE_PANEL = "background: #fff;margin: 1px;border: 1px solid #ddd;";
 
 	private static final String CONFIG_COOKIE_NAME = "GWT-Console-conf";
 
@@ -53,14 +54,16 @@ public class Console {
 	private PopupPanel popupContainerPanel = new PopupPanel();
 	private ScrollPanelWithMinSize scrollPanel = new ScrollPanelWithMinSize(DISCLOSURE_PANEL_MIN_HEIGHT, DISCLOSURE_PANEL_MIN_WIDTH);
 
-	private FlowPanel consoleWidgetsPanel = new FlowPanel();
-	private FlowPanel consoleLogsPanel = new FlowPanel();
-
-	private Level notifyLevel = Level.ALL;
+	private FlowPanel widgetPanel = new FlowPanel();
+	private LogPanel logPanel;
 
 	private NotificationWidget notificationWidget;
 
+	private Level notifyLevel = Level.ALL;
+
 	private ConsoleConfiguration configuration;
+
+	private boolean autoScroll = true;
 
 	public static Console get() {
 		if (instance == null) {
@@ -78,19 +81,22 @@ public class Console {
 
 		mainPanel.add(initTitleLabel());
 
-		mainPanel.add(consoleWidgetsPanel);
+		mainPanel.add(widgetPanel);
 
-		StyleHelper.addStyle(consoleWidgetsPanel, CSS_SCROLLPANEL);
-		consoleWidgetsPanel.add(initClearConfigurationCookieButton());
-		consoleWidgetsPanel.add(initConfigurationResetButton());
+		StyleHelper.addStyle(widgetPanel, CSS_SCROLLPANEL);
+		widgetPanel.add(initClearConfigurationCookieButton());
+		widgetPanel.add(initConfigurationResetButton());
 
 		StyleHelper.addStyle(scrollPanel, CSS_SCROLLPANEL);
-		scrollPanel.add(consoleLogsPanel);
+		initLogPanel();
+		scrollPanel.add(logPanel);
 		mainPanel.add(scrollPanel);
 
 		mainPanel.add(initResizeHandler());
 
 		mainPanel.add(initCloseHandler());
+
+		initAutoScroll();
 	}
 
 	private Widget initTitleLabel() {
@@ -141,7 +147,15 @@ public class Console {
 			}
 		});
 		return b;
+	}
 
+	private void initLogPanel() {
+		logPanel = new LogPanel() {
+			@Override
+			protected void widgetAdded() {
+				updateScrollPosition();
+			}
+		};
 	}
 
 	private Widget initResizeHandler() {
@@ -182,6 +196,20 @@ public class Console {
 		return closeLabel;
 	}
 
+	private void initAutoScroll() {
+		scrollPanel.addScrollHandler(new ScrollHandler() {
+
+			@Override
+			public void onScroll(ScrollEvent event) {
+				// if (scrollPanel.getScrollPosition() == scrollPanel.getElement().getScrollHeight()) {
+				// autoScroll = true;
+				// } else {
+				// autoScroll = false;
+				// }
+			}
+		});
+	}
+
 	public void init(boolean registerToRootLogger, Level notifyLevel, boolean registerShorcut, boolean addSwitchButtonOnTopRight, boolean saveConfigurationInCookie) {
 		if (registerToRootLogger) {
 			registerToRootLogger();
@@ -202,13 +230,7 @@ public class Console {
 		this.notifyLevel = notifyLevel;
 	}
 
-	public void addSwitchButtonOnTopRight() {
-		Button switchButton = getSwitchButton();
-		StyleHelper.addStyle(switchButton, CSS_SWITCH_BUTTON);
-		RootPanel.get().add(switchButton);
-	}
-
-	public Button getSwitchButton() {
+	private void addSwitchButtonOnTopRight() {
 		Button switchButton = new Button("Console");
 		switchButton.addClickHandler(new ClickHandler() {
 			@Override
@@ -216,7 +238,8 @@ public class Console {
 				switchConsoleDisplay();
 			}
 		});
-		return switchButton;
+		StyleHelper.addStyle(switchButton, CSS_SWITCH_BUTTON);
+		RootPanel.get().add(switchButton);
 	}
 
 	private void registerShorcut() {
@@ -239,28 +262,10 @@ public class Console {
 		}
 	}
 
-	public void notify(String message) {
-		if (notificationWidget == null) {
-			notificationWidget = new NotificationWidget();
-			RootPanel.get().add(notificationWidget);
-		}
-		notificationWidget.showNotification(message);
-	}
-
-	// FIXME root ?
-	public void registerToRootLogger() {
-		Handler handler = new HasWidgetsLogHandler(consoleLogsPanel);
+	private void registerToRootLogger() {
+		Handler handler = new HasWidgetsLogHandler(logPanel);
 		Logger.getLogger("").addHandler(handler);
-		// FIXME test !
 		// handler.setFormatter(new TextFormatter());
-	}
-
-	// FIXME a log with no disclosure, disclosure as an option
-	public void log(String logMessage, String messageTitle) {
-		// FIXME use notifyLevel
-		// TODO check XSS
-		// SafeHtml.sanitize is sufficient ?
-		addDisclosurePanelWithWidget(new HTML(logMessage), messageTitle);
 	}
 
 	private void switchConsoleDisplay() {
@@ -272,30 +277,26 @@ public class Console {
 		configuration.saveShowConsole(popupContainerPanel.isShowing());
 	}
 
-	private void addDisclosurePanelWithWidget(Widget widget, String disclosurePanelTitle) {
-		DisclosurePanel logDisclosurePanel = new DisclosurePanel(new Date() + " : " + disclosurePanelTitle);
-		StyleHelper.addStyle(logDisclosurePanel, CSS_LOG_DISCLOSURE_PANEL);
-		logDisclosurePanel.setContent(widget);
-		logDisclosurePanel.addOpenHandler(new OpenHandler<DisclosurePanel>() {
-			@Override
-			public void onOpen(OpenEvent<DisclosurePanel> event) {
-				updateScrollPosition();
-			}
-		});
-		consoleLogsPanel.add(logDisclosurePanel);
-		updateScrollPosition();
-	}
-
-	// FIXME not if user is scrolling...
 	private void updateScrollPosition() {
-		scrollPanel.setScrollPosition(scrollPanel.getElement().getScrollHeight());
+		if (autoScroll) {
+			scrollPanel.setScrollPosition(scrollPanel.getElement().getScrollHeight());
+		}
 	}
 
-	public Level getNotifyLevel() {
-		return notifyLevel;
+	public void notify(String message) {
+		if (notificationWidget == null) {
+			notificationWidget = new NotificationWidget();
+			RootPanel.get().add(notificationWidget);
+		}
+		notificationWidget.showNotification(message);
 	}
 
-	public void setNotifyLevel(Level notifyLevel) {
-		this.notifyLevel = notifyLevel;
+	public void log(String message) {
+		// FIXME check XSS, SafeHtml.sanitize is sufficient ?
+		logPanel.add(new HTML(message));
+	}
+
+	public FlowPanel getWidgetPanel() {
+		return widgetPanel;
 	}
 }
