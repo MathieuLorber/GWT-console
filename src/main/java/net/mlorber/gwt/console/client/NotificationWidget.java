@@ -6,7 +6,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 
-public class NotificationWidget extends Composite {
+class NotificationWidget extends Composite {
 
 	private static String CSS_PANEL = "display:none;position: absolute;top: 0;right: 10px;padding: 2px;width: 200px;background: #fff;box-shadow: 0px 0px 5px #bbb;-moz-box-shadow: 0px 0px 5px #bbb;-webkit-box-shadow: 0px 0px 5px #bbb;border-bottom-right-radius: 6px;border-bottom-left-radius: 6px;-moz-border-radius-bottomright: 6px;-moz-border-radius-bottomleft: 6px;-webkit-border-bottom-right-radius: 6px;-webkit-border-bottom-left-radius: 6px;";
 
