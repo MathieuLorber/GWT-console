@@ -37,6 +37,7 @@ public class Console {
 
 	private static final String CSS_CONSOLE = "background: #616161;color: #fff;z-index: 2000;border: 1px solid #fff;";
 	private static final String CSS_CONSOLE_TITLE = "font-size: 10px;padding-left: 5px;text-align: left;";
+	private static final String CSS_WIDGET_PANEL = "overflow: auto;";
 	private static final String CSS_SCROLLPANEL = "background: #eee;margin: 2px 2px 12px 2px;color: #000;";
 	private static final String CSS_RESIZE_IMAGE = "position: absolute;bottom: 4px;right: 4px;cursor:nw-resize;";
 	private static final String CSS_CLOSE_LABEL = "position: absolute;top: 0;right: 5px;cursor:pointer;";
@@ -80,6 +81,7 @@ public class Console {
 
 		mainPanel.add(initTitleLabel());
 
+		StyleHelper.addStyle(widgetPanel, CSS_WIDGET_PANEL);
 		mainPanel.add(widgetPanel);
 
 		StyleHelper.addStyle(widgetPanel, CSS_SCROLLPANEL);
@@ -172,6 +174,7 @@ public class Console {
 			@Override
 			public void handleDrag(int absX, int absY) {
 				scrollPanel.incrementPixelSize(absX, absY);
+				widgetPanel.setWidth(scrollPanel.getOffsetWidth() + "px");
 			}
 
 			@Override
@@ -257,6 +260,7 @@ public class Console {
 	private void initFromConfiguration() {
 		popupContainerPanel.setPopupPosition(configuration.getConsoleLeftPosition(), configuration.getConsoleTopPosition());
 		scrollPanel.setPixelSize(configuration.getConsoleWidth(), configuration.getConsoleHeight());
+		widgetPanel.setWidth(configuration.getConsoleWidth() + "px");
 		if (configuration.isShowConsole()) {
 			popupContainerPanel.show();
 		}
@@ -291,12 +295,12 @@ public class Console {
 		notificationWidget.showNotification(message);
 	}
 
+	public FlowPanel getWidgetPanel() {
+		return widgetPanel;
+	}
+
 	public void log(String message) {
 		// FIXME check XSS, SafeHtml.sanitize is sufficient ?
 		logPanel.add(new HTML(message));
-	}
-
-	public FlowPanel getWidgetPanel() {
-		return widgetPanel;
 	}
 }
