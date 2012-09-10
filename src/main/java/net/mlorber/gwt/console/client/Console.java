@@ -60,6 +60,7 @@ public class Console {
 
 	private NotificationWidget notificationWidget;
 
+	// FIXME use it !
 	private Level notifyLevel = Level.ALL;
 
 	private ConsoleConfiguration configuration;
@@ -85,8 +86,6 @@ public class Console {
 		mainPanel.add(widgetPanel);
 
 		StyleHelper.addStyle(widgetPanel, CSS_SCROLLPANEL);
-		widgetPanel.add(initClearConfigurationCookieButton());
-		widgetPanel.add(initConfigurationResetButton());
 
 		StyleHelper.addStyle(scrollPanel, CSS_SCROLLPANEL);
 		initLogPanel();
@@ -123,31 +122,6 @@ public class Console {
 			}
 		};
 		return titleLabel;
-	}
-
-	private Widget initClearConfigurationCookieButton() {
-		Button b = new Button("Clear configuration cookie");
-		b.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				ConsoleConfiguration.clearCookie(CONFIG_COOKIE_NAME);
-			}
-		});
-		return b;
-	}
-
-	private Widget initConfigurationResetButton() {
-		Button b = new Button("Reset configuration");
-		b.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				configuration.reset();
-				initFromConfiguration();
-			}
-		});
-		return b;
 	}
 
 	private void initLogPanel() {
