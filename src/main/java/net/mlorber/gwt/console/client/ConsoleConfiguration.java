@@ -5,6 +5,7 @@ import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.Window;
 
 class ConsoleConfiguration {
 
@@ -41,11 +42,7 @@ class ConsoleConfiguration {
 			consoleWidth = Integer.parseInt(json.get(COOKIE_WIDTH_SIZE).toString());
 			consoleHeight = Integer.parseInt(json.get(COOKIE_HEIGHT_SIZE).toString());
 		} else {
-			// FIXME create
-			// si de la merde dans la string ?
-			// genre mise a jour de la console...
-			// Trouver l'exception et agir en conséquence
-			// une classe dédiée à cette configuration en fait qui gere elle meme ces histoires
+			// FIXME create if String is not awaited one ? (console update for example...) => handle Exception
 			json = new JSONObject();
 			showConsole = false;
 			saveShowConsole(showConsole);
@@ -82,9 +79,8 @@ class ConsoleConfiguration {
 	}
 
 	public void reset() {
-		// FIXME center !
-		consoleLeftPosition = 0;
-		consoleTopPosition = 0;
+		consoleLeftPosition = (Window.getClientWidth() - CONSOLE_DEFAULT_WIDTH) / 2;
+		consoleTopPosition = (Window.getClientHeight() - CONSOLE_DEFAULT_HEIGHT) / 2;
 		consoleWidth = CONSOLE_DEFAULT_WIDTH;
 		consoleHeight = CONSOLE_DEFAULT_HEIGHT;
 		savePosition(consoleLeftPosition, consoleTopPosition);
