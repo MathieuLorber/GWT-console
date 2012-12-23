@@ -1,6 +1,5 @@
 package net.mlorber.gwt.console.client;
 
-import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -61,7 +60,7 @@ public class Console {
 	private NotificationWidget notificationWidget;
 
 	// FIXME use it !
-	private Level notifyLevel = Level.ALL;
+	private Level notifyLevel;
 
 	private ConsoleConfiguration configuration;
 
@@ -187,51 +186,51 @@ public class Console {
 		});
 	}
 
-	public void init(boolean registerToRootLogger, Level notifyLevel, boolean registerShorcut, boolean addSwitchButtonOnTopRight, boolean saveConfigurationInCookie) {
-		if (registerToRootLogger) {
-			registerToRootLogger();
-		}
-		if (registerShorcut) {
-			registerShorcut();
-		}
-		if (addSwitchButtonOnTopRight) {
-			addSwitchButtonOnTopRight();
-		}
+	// TODO notifyLevel impl
+	// TODO remove saveConfigurationInCookie, use delegate
+	public Console init(Logger logger, Level notifyLevel, boolean notifyUncaughExceptions, boolean saveConfigurationInCookie) {
+		logger.addHandler(new HasWidgetsLogHandler(logPanel));
+
+		this.notifyLevel = notifyLevel;
+
 		if (saveConfigurationInCookie) {
 			configuration = new ConsoleConfiguration(CONFIG_COOKIE_NAME);
 		} else {
 			configuration = new ConsoleConfiguration();
 			ConsoleConfiguration.clearCookie(CONFIG_COOKIE_NAME);
 		}
-		initFromConfiguration();
-		this.notifyLevel = notifyLevel;
+
+		initConfiguration();
+		return this;
 	}
 
-	private void addSwitchButtonOnTopRight() {
+	public Console addButton() {
 		Button switchButton = new Button("Console");
 		switchButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				switchConsoleDisplay();
+				toggleDisplay();
 			}
 		});
 		StyleHelper.addStyle(switchButton, CSS_SWITCH_BUTTON);
 		RootPanel.get().add(switchButton);
+		return this;
 	}
 
-	private void registerShorcut() {
+	public Console registerShorcut() {
 		Event.addNativePreviewHandler(new NativePreviewHandler() {
 			@Override
 			public void onPreviewNativeEvent(NativePreviewEvent event) {
 				if (event.getTypeInt() == Event.ONKEYDOWN && event.getNativeEvent().getShiftKey() && event.getNativeEvent().getAltKey()
 						&& event.getNativeEvent().getKeyCode() == KEY_C) {
-					switchConsoleDisplay();
+					toggleDisplay();
 				}
 			}
 		});
+		return this;
 	}
 
-	private void initFromConfiguration() {
+	private void initConfiguration() {
 		popupContainerPanel.setPopupPosition(configuration.getConsoleLeftPosition(), configuration.getConsoleTopPosition());
 		scrollPanel.setPixelSize(configuration.getConsoleWidth(), configuration.getConsoleHeight());
 		widgetPanel.setWidth(configuration.getConsoleWidth() + "px");
@@ -240,13 +239,7 @@ public class Console {
 		}
 	}
 
-	private void registerToRootLogger() {
-		Handler handler = new HasWidgetsLogHandler(logPanel);
-		Logger.getLogger("").addHandler(handler);
-		// handler.setFormatter(new TextFormatter());
-	}
-
-	private void switchConsoleDisplay() {
+	public void toggleDisplay() {
 		if (!popupContainerPanel.isShowing()) {
 			popupContainerPanel.show();
 		} else {
