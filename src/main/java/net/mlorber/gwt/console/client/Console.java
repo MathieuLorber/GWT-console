@@ -3,6 +3,7 @@ package net.mlorber.gwt.console.client;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
@@ -188,10 +189,24 @@ public class Console {
 
 	// TODO notifyLevel impl
 	// TODO remove saveConfigurationInCookie, use delegate
-	public Console init(Logger logger, Level notifyLevel, boolean notifyUncaughExceptions, boolean saveConfigurationInCookie) {
+	public Console init(Logger logger, Level notifyLevel, final boolean catchUncaughtExceptions, boolean saveConfigurationInCookie) {
 		logger.addHandler(new HasWidgetsLogHandler(logPanel));
 
 		this.notifyLevel = notifyLevel;
+
+		if (catchUncaughtExceptions) {
+			final GWT.UncaughtExceptionHandler previousUncaughtExceptionHandler = GWT.getUncaughtExceptionHandler();
+			GWT.setUncaughtExceptionHandler(new GWT.UncaughtExceptionHandler() {
+
+				@Override
+				public void onUncaughtException(Throwable e) {
+					// TODO notify as severe
+					Console.get().notify(e.getMessage());
+					log("Uncaught exception \n" + e.getMessage());
+					previousUncaughtExceptionHandler.onUncaughtException(e);
+				}
+			});
+		}
 
 		if (saveConfigurationInCookie) {
 			configuration = new ConsoleConfiguration(CONFIG_COOKIE_NAME);
