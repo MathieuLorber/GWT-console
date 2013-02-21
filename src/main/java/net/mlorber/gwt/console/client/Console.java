@@ -7,6 +7,7 @@ import net.mlorber.gwt.console.client.notification.JQueryNotificationFactory;
 import net.mlorber.gwt.console.client.notification.NotificationFactory;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
@@ -72,6 +73,8 @@ public class Console {
 
 	// FIXME rename
 	private NotificationFactory notificationFactory;
+
+	private UncaughtExceptionHandler initialUncaughtExceptionHandler;
 
 	public static Console get() {
 		if (instance == null) {
@@ -196,21 +199,18 @@ public class Console {
 	// TODO notifyLevel impl
 	// + make a method register(logger, notifyLevel)
 	// TODO remove saveConfigurationInCookie, use delegate
-	public Console init(Logger logger, Level notifyLevel, final boolean catchUncaughtExceptions, boolean saveConfigurationInCookie) {
+	// TODO doc logUncaughtExceptions, log, not catch
+	public Console init(Logger logger, Level notifyLevel, final boolean logUncaughtExceptions, boolean saveConfigurationInCookie) {
 		logger.addHandler(new HasWidgetsLogHandler(logPanel));
 
 		this.notifyLevel = notifyLevel;
 
-		if (catchUncaughtExceptions) {
-			final GWT.UncaughtExceptionHandler previousUncaughtExceptionHandler = GWT.getUncaughtExceptionHandler();
+		initialUncaughtExceptionHandler = GWT.getUncaughtExceptionHandler();
+		if (logUncaughtExceptions) {
 			GWT.setUncaughtExceptionHandler(new GWT.UncaughtExceptionHandler() {
-
 				@Override
 				public void onUncaughtException(Throwable e) {
-					// TODO notify as severe
-					Console.get().notify(e.getMessage());
-					log("Uncaught exception \n" + e.getMessage());
-					previousUncaughtExceptionHandler.onUncaughtException(e);
+					logUncaughtException(e);
 				}
 			});
 		}
@@ -280,11 +280,11 @@ public class Console {
 
 	public void notify(String message) {
 		notificationFactory.notify(message);
-//		if (notificationWidget == null) {
-//			notificationWidget = new NotificationWidget();
-//			RootPanel.get().add(notificationWidget);
-//		}
-//		notificationWidget.showNotification(message);
+		// if (notificationWidget == null) {
+		// notificationWidget = new NotificationWidget();
+		// RootPanel.get().add(notificationWidget);
+		// }
+		// notificationWidget.showNotification(message);
 	}
 
 	public FlowPanel getWidgetPanel() {
@@ -294,5 +294,17 @@ public class Console {
 	public void log(String message) {
 		// FIXME check XSS, SafeHtml.sanitize is sufficient ?
 		logPanel.add(new HTML(message));
+	}
+
+	public void logUncaughtException(Throwable e) {
+		// TODO notify as severe
+		Console.get().notify(e.getMessage());
+		log("Uncaught exception \n" + e.getMessage());
+		if (initialUncaughtExceptionHandler != null) {
+			initialUncaughtExceptionHandler.onUncaughtException(e);
+		} else {
+			// FIXME just check prod...
+			notify("No initial UncaughtExceptionHandler");
+		}
 	}
 }
