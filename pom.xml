@@ -8,7 +8,7 @@
 
 	<properties>
 		<!-- minimal version for GWT logging -->
-		<gwt.version>2.1.0</gwt.version>
+		<gwt.version>2.5.0</gwt.version>
 		<gwt.plugin.version>2.4.0</gwt.plugin.version>
 		<maven.compiler.source>1.6</maven.compiler.source>
 		<maven.compiler.target>1.6</maven.compiler.target>
