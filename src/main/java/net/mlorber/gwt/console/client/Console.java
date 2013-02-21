@@ -3,6 +3,9 @@ package net.mlorber.gwt.console.client;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import net.mlorber.gwt.console.client.notification.JQueryNotificationFactory;
+import net.mlorber.gwt.console.client.notification.NotificationFactory;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -66,6 +69,9 @@ public class Console {
 	private ConsoleConfiguration configuration;
 
 	private boolean autoScroll = true;
+
+	// FIXME rename
+	private NotificationFactory notificationFactory;
 
 	public static Console get() {
 		if (instance == null) {
@@ -188,6 +194,7 @@ public class Console {
 	}
 
 	// TODO notifyLevel impl
+	// + make a method register(logger, notifyLevel)
 	// TODO remove saveConfigurationInCookie, use delegate
 	public Console init(Logger logger, Level notifyLevel, final boolean catchUncaughtExceptions, boolean saveConfigurationInCookie) {
 		logger.addHandler(new HasWidgetsLogHandler(logPanel));
@@ -216,6 +223,8 @@ public class Console {
 		}
 
 		initConfiguration();
+
+		this.notificationFactory = new JQueryNotificationFactory();
 		return this;
 	}
 
@@ -270,11 +279,12 @@ public class Console {
 	}
 
 	public void notify(String message) {
-		if (notificationWidget == null) {
-			notificationWidget = new NotificationWidget();
-			RootPanel.get().add(notificationWidget);
-		}
-		notificationWidget.showNotification(message);
+		notificationFactory.notify(message);
+//		if (notificationWidget == null) {
+//			notificationWidget = new NotificationWidget();
+//			RootPanel.get().add(notificationWidget);
+//		}
+//		notificationWidget.showNotification(message);
 	}
 
 	public FlowPanel getWidgetPanel() {
