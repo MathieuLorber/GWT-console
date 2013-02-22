@@ -76,6 +76,9 @@ public class Console {
 
 	private UncaughtExceptionHandler initialUncaughtExceptionHandler;
 
+	// FIXME i18n
+	private String unknownErrorMessage = "Unknown error : ";
+
 	public static Console get() {
 		if (instance == null) {
 			instance = new Console();
@@ -298,13 +301,22 @@ public class Console {
 
 	public void logUncaughtException(Throwable e) {
 		// TODO notify as severe
-		Console.get().notify(e.getMessage());
-		log("Uncaught exception \n" + e.getMessage());
+		Console.get().notify(unknownErrorMessage + e.getLocalizedMessage());
+		log(unknownErrorMessage + e.getLocalizedMessage());
 		if (initialUncaughtExceptionHandler != null) {
 			initialUncaughtExceptionHandler.onUncaughtException(e);
 		} else {
-			// FIXME just check prod...
+			// FIXME just check prod et virer...
 			notify("No initial UncaughtExceptionHandler");
 		}
 	}
+
+	public String getUnknownErrorMessage() {
+		return unknownErrorMessage;
+	}
+
+	public void setUnknownErrorMessage(String unknownErrorMessage) {
+		this.unknownErrorMessage = unknownErrorMessage;
+	}
+
 }
