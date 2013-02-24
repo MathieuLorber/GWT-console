@@ -11,14 +11,14 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 
-public class JQueryNotificationFactory implements NotificationFactory {
+public class SimpleNotificationFactory implements NotificationFactory {
 
    private static final String CSS_CONTAINER = "position: fixed; width:600px; margin:auto; padding-top: 30px;z-index: 1000;";
    // FIXME missing browsers specific radius
    private static final String CSS_NOTIFICATION = "width: 100%;margin: 2px;padding: 10px;background: #C7DCF2;border: 3px solid #fff;box-shadow: 0px 0px 5px #bbb;-moz-box-shadow: 0px 0px 5px #bbb;-webkit-box-shadow: 0px 0px 5px #bbb;border-radius: 6px;border-radius: 6px;-moz-border-radius-bottomright: 6px;-moz-border-radius-bottomleft: 6px;-webkit-border-radius: 6px;-webkit-border-radius: 6px;";;
    private FlowPanel container;
 
-   public JQueryNotificationFactory() {
+   public SimpleNotificationFactory() {
       container = new FlowPanel();
       StyleHelper.addStyle(container, CSS_CONTAINER);
       RootPanel.get().add(container);
@@ -41,11 +41,11 @@ public class JQueryNotificationFactory implements NotificationFactory {
       }.schedule(3000);
    }
 
-   private native void showNotification(Element element) /*-{
+   protected native void showNotification(Element element) /*-{
                                                          $wnd.$(element).fadeIn(200);
                                                          }-*/;
 
-   private native void hideNotification(Element element) /*-{
+   protected native void hideNotification(Element element) /*-{
                                                          $wnd.$(element).fadeOut(2000);
                                                          }-*/;
 
