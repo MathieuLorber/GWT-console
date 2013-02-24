@@ -8,6 +8,7 @@ import net.mlorber.gwt.console.client.notification.NotificationFactory;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
@@ -190,7 +191,8 @@ public class Console {
 
 			@Override
 			public void onScroll(ScrollEvent event) {
-				// if (scrollPanel.getScrollPosition() == scrollPanel.getElement().getScrollHeight()) {
+				// if (scrollPanel.getScrollPosition() ==
+				// scrollPanel.getElement().getScrollHeight()) {
 				// autoScroll = true;
 				// } else {
 				// autoScroll = false;
@@ -301,14 +303,17 @@ public class Console {
 
 	public void logUncaughtException(Throwable e) {
 		// TODO notify as severe
-		notify(unknownErrorMessage + e.getLocalizedMessage());
-		log(unknownErrorMessage + e.getLocalizedMessage());
 		if (initialUncaughtExceptionHandler != null) {
 			initialUncaughtExceptionHandler.onUncaughtException(e);
 		} else {
 			// FIXME just check prod et virer...
 			notify("No initial UncaughtExceptionHandler");
 		}
+		// If we have a problem with notifier (jQuery impl instancied without
+		// jQuery for example), initialUncaughtExceptionHandler is called
+		// before the crash
+		notify(unknownErrorMessage + e.getLocalizedMessage());
+		log(unknownErrorMessage + e.getLocalizedMessage());
 	}
 
 	public String getUnknownErrorMessage() {
