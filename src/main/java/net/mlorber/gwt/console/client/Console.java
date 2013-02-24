@@ -62,10 +62,8 @@ public class Console {
 	private FlowPanel widgetPanel = new FlowPanel();
 	private LogPanel logPanel;
 
-	private NotificationWidget notificationWidget;
-
 	// FIXME use it !
-	private Level notifyLevel;
+	// private Level notifyLevel;
 
 	private ConsoleConfiguration configuration;
 
@@ -207,7 +205,7 @@ public class Console {
 	public Console init(Logger logger, Level notifyLevel, final boolean logUncaughtExceptions, boolean saveConfigurationInCookie) {
 		logger.addHandler(new HasWidgetsLogHandler(logPanel));
 
-		this.notifyLevel = notifyLevel;
+//		this.notifyLevel = notifyLevel;
 
 		initialUncaughtExceptionHandler = GWT.getUncaughtExceptionHandler();
 		if (logUncaughtExceptions) {
@@ -278,7 +276,7 @@ public class Console {
 
 	private void updateScrollPosition() {
 		if (autoScroll) {
-			scrollPanel.setScrollPosition(scrollPanel.getElement().getScrollHeight());
+			scrollPanel.setVerticalScrollPosition(scrollPanel.getElement().getScrollHeight());
 		}
 	}
 
