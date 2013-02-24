@@ -301,7 +301,7 @@ public class Console {
 
 	public void logUncaughtException(Throwable e) {
 		// TODO notify as severe
-		Console.get().notify(unknownErrorMessage + e.getLocalizedMessage());
+		notify(unknownErrorMessage + e.getLocalizedMessage());
 		log(unknownErrorMessage + e.getLocalizedMessage());
 		if (initialUncaughtExceptionHandler != null) {
 			initialUncaughtExceptionHandler.onUncaughtException(e);
