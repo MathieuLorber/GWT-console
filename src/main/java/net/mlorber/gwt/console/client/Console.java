@@ -3,7 +3,7 @@ package net.mlorber.gwt.console.client;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import net.mlorber.gwt.console.client.notification.SimpleNotificationFactory;
+import net.mlorber.gwt.console.client.notification.JQueryNotificationFactory;
 import net.mlorber.gwt.console.client.notification.NotificationFactory;
 
 import com.google.gwt.core.client.GWT;
@@ -227,7 +227,7 @@ public class Console {
 
 		initConfiguration();
 
-		this.notificationFactory = new SimpleNotificationFactory();
+		this.notificationFactory = new JQueryNotificationFactory();
 		return this;
 	}
 

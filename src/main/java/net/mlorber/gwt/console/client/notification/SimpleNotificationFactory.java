@@ -13,40 +13,41 @@ import com.google.gwt.user.client.ui.RootPanel;
 
 public class SimpleNotificationFactory implements NotificationFactory {
 
-   private static final String CSS_CONTAINER = "position: fixed; width:600px; margin:auto; padding-top: 30px;z-index: 1000;";
-   // FIXME missing browsers specific radius
-   private static final String CSS_NOTIFICATION = "width: 100%;margin: 2px;padding: 10px;background: #C7DCF2;border: 3px solid #fff;box-shadow: 0px 0px 5px #bbb;-moz-box-shadow: 0px 0px 5px #bbb;-webkit-box-shadow: 0px 0px 5px #bbb;border-radius: 6px;border-radius: 6px;-moz-border-radius-bottomright: 6px;-moz-border-radius-bottomleft: 6px;-webkit-border-radius: 6px;-webkit-border-radius: 6px;";;
-   private FlowPanel container;
+	private static final String CSS_CONTAINER = "position: fixed; width:600px; margin:auto; padding-top: 30px;z-index: 1000;";
+	// FIXME missing browsers specific radius
+	private static final String CSS_NOTIFICATION = "width: 100%;margin: 2px;padding: 10px;background: #C7DCF2;border: 3px solid #fff;box-shadow: 0px 0px 5px #bbb;-moz-box-shadow: 0px 0px 5px #bbb;-webkit-box-shadow: 0px 0px 5px #bbb;border-radius: 6px;border-radius: 6px;-moz-border-radius-bottomright: 6px;-moz-border-radius-bottomleft: 6px;-webkit-border-radius: 6px;-webkit-border-radius: 6px;";;
+	private FlowPanel container;
 
-   public SimpleNotificationFactory() {
-      container = new FlowPanel();
-      StyleHelper.addStyle(container, CSS_CONTAINER);
-      RootPanel.get().add(container);
-   }
+	public SimpleNotificationFactory() {
+		container = new FlowPanel();
+		StyleHelper.addStyle(container, CSS_CONTAINER);
+		RootPanel.get().add(container);
+	}
 
-   // TODO a type ? warning / info... Do not use Level but for notif history
-   @Override
-   public void notify(String message) {
-      container.getElement().getStyle().setRight((Window.getClientWidth() - 600) / 2, Unit.PX);
-      final Label notificationLabel = new Label(message);
-      container.add(notificationLabel);
-      StyleHelper.addStyle(notificationLabel, CSS_NOTIFICATION);
-      notificationLabel.getElement().getStyle().setDisplay(Display.NONE);
-      showNotification(notificationLabel.getElement());
-      new Timer() {
-         @Override
-         public void run() {
-            hideNotification(notificationLabel.getElement());
-         }
-      }.schedule(3000);
-   }
+	// TODO a type ? warning / info... Do not use Level but for notif history
+	@Override
+	public void notify(String message) {
+		container.getElement().getStyle().setRight((Window.getClientWidth() - 600) / 2, Unit.PX);
+		final Label notificationLabel = new Label(message);
+		container.add(notificationLabel);
+		StyleHelper.addStyle(notificationLabel, CSS_NOTIFICATION);
+		notificationLabel.getElement().getStyle().setDisplay(Display.NONE);
+		showNotification(notificationLabel.getElement());
+		new Timer() {
+			@Override
+			public void run() {
+				hideNotification(notificationLabel.getElement());
+			}
+		}.schedule(3000);
+	}
 
-   protected native void showNotification(Element element) /*-{
-                                                         $wnd.$(element).fadeIn(200);
-                                                         }-*/;
+	protected void showNotification(Element element) {
+		element.getStyle().setDisplay(Display.BLOCK);
+	}
 
-   protected native void hideNotification(Element element) /*-{
-                                                         $wnd.$(element).fadeOut(2000);
-                                                         }-*/;
+	// FIXME verify
+	protected void hideNotification(Element element) {
+		element.removeFromParent();
+	}
 
 }
