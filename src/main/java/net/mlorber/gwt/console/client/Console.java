@@ -280,6 +280,7 @@ public class Console {
 		}
 	}
 
+	// FIXME rename showNotification
 	public void notify(String message) {
 		notificationFactory.notify(message);
 		// if (notificationWidget == null) {
