@@ -3,6 +3,7 @@ package net.mlorber.gwt.console.client.notification;
 import com.google.gwt.dom.client.Element;
 
 // FIXME for autoswitch between simple & jquery impl ?
+// FIXME utiliser css3 en fait ?
 public class JQueryNotificationFactory extends SimpleNotificationFactory {
 
 	@Override

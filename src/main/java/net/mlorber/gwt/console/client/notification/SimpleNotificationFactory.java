@@ -1,5 +1,7 @@
 package net.mlorber.gwt.console.client.notification;
 
+import java.util.logging.Level;
+
 import net.mlorber.gwt.console.client.StyleHelper;
 
 import com.google.gwt.dom.client.Element;
@@ -11,7 +13,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 
-public class SimpleNotificationFactory implements NotificationFactory {
+public class SimpleNotificationFactory extends NotificationFactory {
 
 	private static final String CSS_CONTAINER = "position: fixed; height:0; width:600px; margin:auto; top: 30px;z-index: 1000;";
 	// FIXME missing browsers specific radius
@@ -25,8 +27,9 @@ public class SimpleNotificationFactory implements NotificationFactory {
 	}
 
 	// TODO a type ? warning / info... Do not use Level but for notif history
+	// FIXME fonction du Level
 	@Override
-	public void notify(String message) {
+	public void showNotification(String message, Level level) {
 		container.getElement().getStyle().setRight((Window.getClientWidth() - 600) / 2, Unit.PX);
 		final Label notificationLabel = new Label(message);
 		container.add(notificationLabel);

@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import net.mlorber.gwt.console.client.notification.JQueryNotificationFactory;
 import net.mlorber.gwt.console.client.notification.NotificationFactory;
+import net.mlorber.gwt.console.client.notification.NotificationHandler;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
@@ -37,6 +38,8 @@ import com.google.gwt.user.client.ui.Widget;
 // * check registerToRootLogger and implement formatter
 public class Console {
 
+	private Logger logger;
+
 	private static final String RESIZE_IMAGE = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA09pVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoMTMuMCAyMDEyMDMwNS5tLjQxNSAyMDEyLzAzLzA1OjIxOjAwOjAwKSAgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6QUNCOEY2QzE4QTA4MTFFMThCOTNCOERBMDkxNjYyODMiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6QUNCOEY2QzI4QTA4MTFFMThCOTNCOERBMDkxNjYyODMiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpBQ0I4RjZCRjhBMDgxMUUxOEI5M0I4REEwOTE2NjI4MyIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpBQ0I4RjZDMDhBMDgxMUUxOEI5M0I4REEwOTE2NjI4MyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pv02MjEAAAA0SURBVHjaYvj//z8DEPcDsT6UDcYwQRB4jyzJAOW8R5OcD9OKLAkGDEhYH5fEfGQJgAADAAm9fbx5gQhKAAAAAElFTkSuQmCC";
 
 	private static final String CSS_CONSOLE = "background: #616161;color: #fff;z-index: 2000;border: 1px solid #fff;";
@@ -62,14 +65,10 @@ public class Console {
 	private FlowPanel widgetPanel = new FlowPanel();
 	private LogPanel logPanel;
 
-	// FIXME use it !
-	// private Level notifyLevel;
-
 	private ConsoleConfiguration configuration;
 
 	private boolean autoScroll = true;
 
-	// FIXME rename
 	private NotificationFactory notificationFactory;
 
 	private UncaughtExceptionHandler initialUncaughtExceptionHandler;
@@ -202,12 +201,18 @@ public class Console {
 	// + make a method register(logger, notifyLevel)
 	// TODO remove saveConfigurationInCookie, use delegate
 	// TODO doc logUncaughtExceptions, log, not catch
-	public Console init(Logger logger, Level notifyLevel, final boolean logUncaughtExceptions, boolean saveConfigurationInCookie) {
-		logger.addHandler(new HasWidgetsLogHandler(logPanel));
+	public Console init(final Logger logger, Level notifyLevel, final boolean logUncaughtExceptions, boolean saveConfigurationInCookie) {
+		this.logger = logger;
+		notificationFactory = new JQueryNotificationFactory();
 
-//		this.notifyLevel = notifyLevel;
+		// TODO own HtmlLogFormatter ?
+		logger.addHandler(new HasWidgetsLogHandler(logPanel));
+		logger.addHandler(new NotificationHandler(notificationFactory, notifyLevel));
+
+		// this.notifyLevel = notifyLevel;
 
 		initialUncaughtExceptionHandler = GWT.getUncaughtExceptionHandler();
+		// FIXME or just not... do it after if you want yours...
 		if (logUncaughtExceptions) {
 			GWT.setUncaughtExceptionHandler(new GWT.UncaughtExceptionHandler() {
 				@Override
@@ -226,7 +231,6 @@ public class Console {
 
 		initConfiguration();
 
-		this.notificationFactory = new JQueryNotificationFactory();
 		return this;
 	}
 
@@ -281,8 +285,8 @@ public class Console {
 	}
 
 	// FIXME rename showNotification
-	public void notify(String message) {
-		notificationFactory.notify(message);
+	public void showNotification(String message) {
+		notificationFactory.showNotification(message);
 		// if (notificationWidget == null) {
 		// notificationWidget = new NotificationWidget();
 		// RootPanel.get().add(notificationWidget);
@@ -300,18 +304,22 @@ public class Console {
 	}
 
 	public void logUncaughtException(Throwable e) {
+		// FIXME just log
 		// TODO notify as severe
 		if (initialUncaughtExceptionHandler != null) {
 			initialUncaughtExceptionHandler.onUncaughtException(e);
 		} else {
 			// FIXME just check prod et virer...
-			notify("No initial UncaughtExceptionHandler");
+			showNotification("No initial UncaughtExceptionHandler");
 		}
 		// If we have a problem with notifier (jQuery impl instancied without
 		// jQuery for example), initialUncaughtExceptionHandler is called
 		// before the crash
-		notify(unknownErrorMessage + e.getLocalizedMessage());
-		log(unknownErrorMessage + e.getLocalizedMessage());
+		// TODO remove unknownErrorMessage ?
+		// showNotification(unknownErrorMessage + e.getLocalizedMessage());
+		// TODO ?
+		System.out.println("sdvsd");
+		logger.log(Level.WARNING, e.getMessage(), e);
 	}
 
 	public String getUnknownErrorMessage() {

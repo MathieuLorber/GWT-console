@@ -1,8 +1,14 @@
 package net.mlorber.gwt.console.client.notification;
 
+import java.util.logging.Level;
 
-public interface NotificationFactory {
+// TODO rename ?
+public abstract class NotificationFactory {
 
-	void notify(String message);
+	public void showNotification(String message) {
+		showNotification(message, Level.INFO);
+	}
+
+	public abstract void showNotification(String message, Level level);
 
 }
