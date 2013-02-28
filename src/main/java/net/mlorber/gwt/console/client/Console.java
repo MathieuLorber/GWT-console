@@ -317,7 +317,6 @@ public class Console {
 		// TODO remove unknownErrorMessage ?
 		// showNotification(unknownErrorMessage + e.getLocalizedMessage());
 		// TODO ?
-		System.out.println("sdvsd");
 		logger.log(Level.WARNING, e.getMessage(), e);
 	}
 
