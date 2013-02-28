@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import net.mlorber.gwt.console.client.notification.JQueryNotificationFactory;
 import net.mlorber.gwt.console.client.notification.NotificationFactory;
+import net.mlorber.gwt.console.client.notification.NotificationFactory.MessageType;
 import net.mlorber.gwt.console.client.notification.NotificationHandler;
 
 import com.google.gwt.core.client.GWT;
@@ -284,14 +285,12 @@ public class Console {
 		}
 	}
 
-	// FIXME rename showNotification
 	public void showNotification(String message) {
 		notificationFactory.showNotification(message);
-		// if (notificationWidget == null) {
-		// notificationWidget = new NotificationWidget();
-		// RootPanel.get().add(notificationWidget);
-		// }
-		// notificationWidget.showNotification(message);
+	}
+
+	public void showNotification(String message, MessageType messageType) {
+		notificationFactory.showNotification(message, messageType);
 	}
 
 	public FlowPanel getWidgetPanel() {
@@ -310,7 +309,7 @@ public class Console {
 			initialUncaughtExceptionHandler.onUncaughtException(e);
 		} else {
 			// FIXME just check prod et virer...
-			showNotification("No initial UncaughtExceptionHandler");
+			notificationFactory.showNotification("No initial UncaughtExceptionHandler");
 		}
 		// If we have a problem with notifier (jQuery impl instancied without
 		// jQuery for example), initialUncaughtExceptionHandler is called
