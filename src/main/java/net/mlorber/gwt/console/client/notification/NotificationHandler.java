@@ -7,10 +7,10 @@ import java.util.logging.LogRecord;
 // TODO see handler code
 public class NotificationHandler extends Handler {
 
-	private NotificationFactory notificationFactory;
+	private AbstractNotificationFactory notificationFactory;
 	private Level level;
 
-	public NotificationHandler(NotificationFactory notificationFactory, Level level) {
+	public NotificationHandler(AbstractNotificationFactory notificationFactory, Level level) {
 		this.notificationFactory = notificationFactory;
 		this.level = level;
 	}

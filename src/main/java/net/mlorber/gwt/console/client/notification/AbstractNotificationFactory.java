@@ -3,7 +3,7 @@ package net.mlorber.gwt.console.client.notification;
 import java.util.logging.Level;
 
 // TODO rename ?
-public abstract class NotificationFactory {
+public abstract class AbstractNotificationFactory {
 
 	// TODO info / success / warning / error
 
