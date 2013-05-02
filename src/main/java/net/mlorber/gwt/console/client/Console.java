@@ -3,10 +3,10 @@ package net.mlorber.gwt.console.client;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import net.mlorber.gwt.console.client.notification.DoNotNotifyException;
-import net.mlorber.gwt.console.client.notification.JQueryNotificationFactory;
 import net.mlorber.gwt.console.client.notification.AbstractNotificationFactory;
 import net.mlorber.gwt.console.client.notification.AbstractNotificationFactory.MessageType;
+import net.mlorber.gwt.console.client.notification.DoNotNotifyException;
+import net.mlorber.gwt.console.client.notification.JQueryNotificationFactory;
 import net.mlorber.gwt.console.client.notification.NotificationHandler;
 
 import com.google.gwt.core.client.GWT;
@@ -16,7 +16,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
-import com.google.gwt.event.shared.UmbrellaException;
 import com.google.gwt.logging.client.HasWidgetsLogHandler;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
