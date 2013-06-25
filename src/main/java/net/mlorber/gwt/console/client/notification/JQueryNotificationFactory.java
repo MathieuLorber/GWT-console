@@ -7,12 +7,20 @@ import com.google.gwt.dom.client.Element;
 public class JQueryNotificationFactory extends SimpleNotificationFactory {
 
 	@Override
-	protected native void showNotification(Element element) /*-{
+	protected native void doShowElement(Element element) /*-{
 		$wnd.$(element).fadeIn(200);
 	}-*/;
 
 	@Override
-	protected native void hideNotification(Element element) /*-{
+	protected void doHideElement(Element element, boolean fade) {
+		if (fade) {
+			doFadeElement(element);
+		} else {
+			super.doHideElement(element, fade);
+		}
+	}
+
+	protected native void doFadeElement(Element element) /*-{
 		$wnd.$(element).fadeOut(2000);
 	}-*/;
 

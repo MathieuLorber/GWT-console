@@ -6,8 +6,8 @@ import java.util.logging.Logger;
 import net.mlorber.gwt.console.client.notification.AbstractNotificationFactory;
 import net.mlorber.gwt.console.client.notification.AbstractNotificationFactory.MessageType;
 import net.mlorber.gwt.console.client.notification.DoNotNotifyException;
-import net.mlorber.gwt.console.client.notification.JQueryNotificationFactory;
 import net.mlorber.gwt.console.client.notification.NotificationHandler;
+import net.mlorber.gwt.console.client.notification.SimpleNotificationFactory;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
@@ -204,8 +204,15 @@ public class Console {
 	// TODO remove saveConfigurationInCookie, use delegate
 	// TODO doc logUncaughtExceptions, log, not catch
 	public Console init(final Logger logger, Level notifyLevel, final boolean logUncaughtExceptions, boolean saveConfigurationInCookie) {
+		return init(logger, notifyLevel, logUncaughtExceptions, saveConfigurationInCookie, new SimpleNotificationFactory());
+	}
+
+	// FIXME log uncaught en appel de méthode
+	// par défaut yes ?
+	public Console init(final Logger logger, Level notifyLevel, final boolean logUncaughtExceptions, boolean saveConfigurationInCookie,
+			AbstractNotificationFactory notificationFactory) {
 		this.logger = logger;
-		notificationFactory = new JQueryNotificationFactory();
+		this.notificationFactory = notificationFactory;
 
 		// TODO own HtmlLogFormatter ?
 		logger.addHandler(new HasWidgetsLogHandler(logPanel));
@@ -286,12 +293,12 @@ public class Console {
 		}
 	}
 
-	public void showNotification(String message) {
-		notificationFactory.showNotification(message);
+	public void showNotification(String message, MessageType messageType) {
+		showNotification(message, messageType, true);
 	}
 
-	public void showNotification(String message, MessageType messageType) {
-		notificationFactory.showNotification(message, messageType);
+	public void showNotification(String message, MessageType messageType, boolean autoHide) {
+		notificationFactory.showNotification(message, messageType, autoHide);
 	}
 
 	public FlowPanel getWidgetPanel() {
@@ -313,7 +320,7 @@ public class Console {
 			}
 		} else {
 			// FIXME just check prod et virer...
-			notificationFactory.showNotification("No initial UncaughtExceptionHandler");
+			showNotification("No initial UncaughtExceptionHandler", MessageType.INFO);
 		}
 		// If we have a problem with notifier (jQuery impl instancied without
 		// jQuery for example), initialUncaughtExceptionHandler is called

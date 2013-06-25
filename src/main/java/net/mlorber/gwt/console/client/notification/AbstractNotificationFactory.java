@@ -11,24 +11,20 @@ public abstract class AbstractNotificationFactory {
 		INFO, SUCCESS, WARNING, ERROR;
 	}
 
-	public final void showNotification(String message) {
-		showNotification(message, Level.INFO);
-	}
-
 	public final void showNotification(String message, Level level) {
 		// TODO what is off ?
 		int logLevel = level.intValue();
 		if (logLevel >= Level.SEVERE.intValue()) {
-			showNotification(message, MessageType.ERROR);
+			showNotification(message, MessageType.ERROR, false);
 			return;
 		}
 		if (logLevel >= Level.WARNING.intValue()) {
-			showNotification(message, MessageType.WARNING);
+			showNotification(message, MessageType.WARNING, true);
 			return;
 		}
-		showNotification(message, MessageType.INFO);
+		showNotification(message, MessageType.INFO, true);
 	}
 
-	public abstract void showNotification(String message, MessageType messageType);
+	public abstract void showNotification(String message, MessageType messageType, boolean autoHide);
 
 }

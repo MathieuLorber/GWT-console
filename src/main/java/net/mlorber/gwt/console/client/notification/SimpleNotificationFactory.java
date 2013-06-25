@@ -5,69 +5,94 @@ import net.mlorber.gwt.console.client.StyleHelper;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 
 public class SimpleNotificationFactory extends AbstractNotificationFactory {
 
 	private static final String CSS_CONTAINER = "position: fixed; height:0; width:600px; margin:auto; top: 30px;z-index: 1060;";
-	// FIXME missing browsers specific radius
-	private static final String CSS_NOTIFICATION = "width: 100%; margin: 2px; padding: 10px; border: 3px solid #fff; box-shadow: 0px 0px 5px #bbb; -moz-box-shadow: 0px 0px 5px #bbb; -webkit-box-shadow: 0px 0px 5px #bbb; border-radius: 6px; border-radius: 6px; -moz-border-radius-bottomright: 6px; -moz-border-radius-bottomleft: 6px; -webkit-border-radius: 6px; -webkit-border-radius: 6px;";
+	private static String CSS_NOTIFICATION = "position: relative; width: 100%; margin: 2px; padding: 10px; border: 3px solid #fff;";
+	{
+		// FIXME missing browsers specific
+		CSS_NOTIFICATION += "box-shadow: 0px 0px 5px #bbb; -moz-box-shadow: 0px 0px 5px #bbb; -webkit-box-shadow: 0px 0px 5px #bbb;";
+		CSS_NOTIFICATION += "border-radius: 2px; border-radius: 2px; -moz-border-radius: 2px; -webkit-border-radius: 2px;";
+	}
 	private static final String CSS_INFO = "background: #C7DCF2;";
 	private static final String CSS_SUCCESS = "background: #D1FAB6;";
 	private static final String CSS_WARNING = "background: #EB8D7A;";
 	private static final String CSS_ERROR = "background: #732222; color: #fff;";
+	private static final String CSS_CLOSE_LABEL = "position: absolute;top: -3px; right: 4px;cursor:pointer; color: #fff; font-size: 24px;";
 	private FlowPanel container;
 
 	public SimpleNotificationFactory() {
 		container = new FlowPanel();
 		StyleHelper.addStyle(container, CSS_CONTAINER);
 		RootPanel.get().add(container);
+		container.getElement().getStyle().setRight((Window.getClientWidth() - 600) / 2, Unit.PX);
 	}
 
-	protected void showNotification(Element element) {
+	protected void doShowElement(Element element) {
 		element.getStyle().setDisplay(Display.BLOCK);
 	}
 
 	// FIXME verify
-	protected void hideNotification(Element element) {
+	protected void doHideElement(Element element, boolean fade) {
 		element.removeFromParent();
 	}
 
 	// TODO a type ? warning / info... Do not use Level but for notif history
 	// FIXME fonction du Level
 	@Override
-	public void showNotification(String message, MessageType infoType) {
-		container.getElement().getStyle().setRight((Window.getClientWidth() - 600) / 2, Unit.PX);
-		final Label notificationLabel = new Label(message);
-		container.add(notificationLabel);
+	public void showNotification(String message, MessageType infoType, boolean autoHide) {
+		final FlowPanel notificationPanel = new FlowPanel();
+		notificationPanel.add(new Label(message));
+		container.add(notificationPanel);
 		// FIXME use class...
-		StyleHelper.addStyle(notificationLabel, CSS_NOTIFICATION);
+		StyleHelper.addStyle(notificationPanel, CSS_NOTIFICATION);
 		switch (infoType) {
 		case INFO:
-			StyleHelper.addStyle(notificationLabel, CSS_INFO);
+			StyleHelper.addStyle(notificationPanel, CSS_INFO);
 			break;
 		case SUCCESS:
-			StyleHelper.addStyle(notificationLabel, CSS_SUCCESS);
+			StyleHelper.addStyle(notificationPanel, CSS_SUCCESS);
 			break;
 		case WARNING:
-			StyleHelper.addStyle(notificationLabel, CSS_WARNING);
+			StyleHelper.addStyle(notificationPanel, CSS_WARNING);
 			break;
 		case ERROR:
-			StyleHelper.addStyle(notificationLabel, CSS_ERROR);
+			StyleHelper.addStyle(notificationPanel, CSS_ERROR);
 			break;
 		}
-		notificationLabel.getElement().getStyle().setDisplay(Display.NONE);
-		showNotification(notificationLabel.getElement());
-		new Timer() {
+		notificationPanel.getElement().getStyle().setDisplay(Display.NONE);
+		doShowElement(notificationPanel.getElement());
+		if (autoHide) {
+			new Timer() {
+				@Override
+				public void run() {
+					doHideElement(notificationPanel.getElement(), true);
+				}
+			}.schedule(3000);
+		} else {
+			initCloseHandler(notificationPanel);
+		}
+	}
+
+	private void initCloseHandler(final FlowPanel panel) {
+		HTML closeLabel = new HTML("&times;");
+		StyleHelper.addStyle(closeLabel, CSS_CLOSE_LABEL);
+		closeLabel.addClickHandler(new ClickHandler() {
 			@Override
-			public void run() {
-				hideNotification(notificationLabel.getElement());
+			public void onClick(ClickEvent event) {
+				doHideElement(panel.getElement(), false);
 			}
-		}.schedule(3000);
+		});
+		panel.add(closeLabel);
 	}
 
 }
