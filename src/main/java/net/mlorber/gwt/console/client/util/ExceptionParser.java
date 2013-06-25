@@ -1,4 +1,4 @@
-package net.mlorber.gwt.console.client;
+package net.mlorber.gwt.console.client.util;
 
 import com.google.web.bindery.event.shared.UmbrellaException;
 
@@ -10,25 +10,26 @@ public abstract class ExceptionParser {
 	// com.google.gwt.event.shared.UmbrellaException
 	// FIXME check ok for classes extending UmbrellaE (GWT...)
 	/**
-	 * 
 	 * @param throwable
-	 * @return true if it had been
+	 * @return true if a cause has been handled and parsing loop be stopped
 	 */
-	public boolean parseAndHandle(Throwable throwable) {
+	public boolean parse(Throwable throwable) {
 		boolean identified = false;
+		if (throwable.getCause() != null) {
+			identified |= parse(throwable.getCause());
+		}
 		if (throwable instanceof UmbrellaException) {
 			if (((UmbrellaException) throwable).getCauses() != null) {
 				for (Throwable subthrowable : ((UmbrellaException) throwable).getCauses()) {
-					identified |= parseAndHandle(subthrowable);
+					if (!identified) {
+						identified |= parse(subthrowable);
+					}
 				}
 			}
-		} else {
-			// FIXME verify useless if umbrella
-			if (throwable.getCause() != null) {
-				identified |= parseAndHandle(throwable.getCause());
-			}
 		}
-		identified |= identifyAndHandle(throwable);
+		if (!identified) {
+			identified |= handleLoop(throwable);
+		}
 		return identified;
 	}
 
@@ -39,8 +40,8 @@ public abstract class ExceptionParser {
 	/**
 	 * 
 	 * @param throwable
-	 * @return true if parent parsed exception must be considered as traitée, false if must be notified as unknown
+	 * @return true if throwable has been handled and parsing loop be stopped
 	 */
-	protected abstract boolean identifyAndHandle(Throwable throwable);
+	protected abstract boolean handleLoop(Throwable throwable);
 
 }

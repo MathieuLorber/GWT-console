@@ -1,6 +1,6 @@
 package net.mlorber.gwt.console.client.notification;
 
-import net.mlorber.gwt.console.client.StyleHelper;
+import net.mlorber.gwt.console.client.util.StyleHelper;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Display;
@@ -22,12 +22,17 @@ public class SimpleNotificationFactory extends AbstractNotificationFactory {
 		// FIXME missing browsers specific
 		CSS_NOTIFICATION += "box-shadow: 0px 0px 5px #bbb; -moz-box-shadow: 0px 0px 5px #bbb; -webkit-box-shadow: 0px 0px 5px #bbb;";
 		CSS_NOTIFICATION += "border-radius: 2px; border-radius: 2px; -moz-border-radius: 2px; -webkit-border-radius: 2px;";
+		// FIXME see anims
+		// CSS_NOTIFICATION +=
+		// "-webkit-transition: all 1s ease-in-out;-moz-transition: all 1s ease-in-out;-o-transition: all 1s ease-in-out;transition: all 1s ease-in-out;";
+		// CSS_NOTIFICATION += "transition:all 1.0s ease-in-out;";
 	}
 	private static final String CSS_INFO = "background: #C7DCF2;";
 	private static final String CSS_SUCCESS = "background: #D1FAB6;";
 	private static final String CSS_WARNING = "background: #EB8D7A;";
 	private static final String CSS_ERROR = "background: #732222; color: #fff;";
 	private static final String CSS_CLOSE_LABEL = "position: absolute;top: -3px; right: 4px;cursor:pointer; color: #fff; font-size: 24px;";
+
 	private FlowPanel container;
 
 	public SimpleNotificationFactory() {

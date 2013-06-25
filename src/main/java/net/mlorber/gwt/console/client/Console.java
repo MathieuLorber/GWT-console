@@ -5,12 +5,9 @@ import java.util.logging.Logger;
 
 import net.mlorber.gwt.console.client.notification.AbstractNotificationFactory;
 import net.mlorber.gwt.console.client.notification.AbstractNotificationFactory.MessageType;
-import net.mlorber.gwt.console.client.notification.DoNotNotifyException;
-import net.mlorber.gwt.console.client.notification.NotificationHandler;
 import net.mlorber.gwt.console.client.notification.SimpleNotificationFactory;
+import net.mlorber.gwt.console.client.util.StyleHelper;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
@@ -72,8 +69,6 @@ public class Console {
 	private boolean autoScroll = true;
 
 	private AbstractNotificationFactory notificationFactory;
-
-	private UncaughtExceptionHandler initialUncaughtExceptionHandler;
 
 	// FIXME i18n
 	private String unknownErrorMessage = "Unknown error : ";
@@ -203,40 +198,41 @@ public class Console {
 	// + make a method register(logger, notifyLevel)
 	// TODO remove saveConfigurationInCookie, use delegate
 	// TODO doc logUncaughtExceptions, log, not catch
-	public Console init(final Logger logger, Level notifyLevel, final boolean logUncaughtExceptions, boolean saveConfigurationInCookie) {
-		return init(logger, notifyLevel, logUncaughtExceptions, saveConfigurationInCookie, new SimpleNotificationFactory());
+	public Console init(final Logger logger, Level notifyLevel) {
+		return init(logger, notifyLevel, new SimpleNotificationFactory());
 	}
 
 	// FIXME log uncaught en appel de méthode
 	// par défaut yes ?
-	public Console init(final Logger logger, Level notifyLevel, final boolean logUncaughtExceptions, boolean saveConfigurationInCookie,
-			AbstractNotificationFactory notificationFactory) {
+	// FIXME sortir notifier
+	public Console init(final Logger logger, Level notifyLevel, AbstractNotificationFactory notificationFactory) {
 		this.logger = logger;
 		this.notificationFactory = notificationFactory;
 
 		// TODO own HtmlLogFormatter ?
 		logger.addHandler(new HasWidgetsLogHandler(logPanel));
-		logger.addHandler(new NotificationHandler(notificationFactory, notifyLevel));
+		// logger.addHandler(new NotificationHandler(notificationFactory,
+		// notifyLevel));
 
 		// this.notifyLevel = notifyLevel;
 
-		initialUncaughtExceptionHandler = GWT.getUncaughtExceptionHandler();
 		// FIXME or just not... do it after if you want yours...
-		if (logUncaughtExceptions) {
-			GWT.setUncaughtExceptionHandler(new GWT.UncaughtExceptionHandler() {
-				@Override
-				public void onUncaughtException(Throwable e) {
-					logUncaughtException(e);
-				}
-			});
-		}
+		// if (logUncaughtExceptions) {
+		// GWT.setUncaughtExceptionHandler(new GWT.UncaughtExceptionHandler() {
+		// @Override
+		// public void onUncaughtException(Throwable e) {
+		// logUncaughtException(e);
+		// }
+		// });
+		// }
 
-		if (saveConfigurationInCookie) {
-			configuration = new ConsoleConfiguration(CONFIG_COOKIE_NAME);
-		} else {
-			configuration = new ConsoleConfiguration();
-			ConsoleConfiguration.clearCookie(CONFIG_COOKIE_NAME);
-		}
+		// FIXME methode pour specifier save dans cookie (ou autre)
+		// if (saveConfigurationInCookie) {
+		// configuration = new ConsoleConfiguration(CONFIG_COOKIE_NAME);
+		// } else {
+		configuration = new ConsoleConfiguration();
+		// ConsoleConfiguration.clearCookie(CONFIG_COOKIE_NAME);
+		// }
 
 		initConfiguration();
 
@@ -313,15 +309,9 @@ public class Console {
 	public void logUncaughtException(Throwable e) {
 		// FIXME just log
 		// TODO notify as severe
-		if (initialUncaughtExceptionHandler != null) {
-			// Shows umbrellaexception even with that
-			if (!(e instanceof DoNotNotifyException)) {
-				initialUncaughtExceptionHandler.onUncaughtException(e);
-			}
-		} else {
-			// FIXME just check prod et virer...
-			showNotification("No initial UncaughtExceptionHandler", MessageType.INFO);
-		}
+		// Shows umbrellaexception even with that
+		// if (!(e instanceof DoNotNotifyException)) {
+		// FIXME just check prod et virer...
 		// If we have a problem with notifier (jQuery impl instancied without
 		// jQuery for example), initialUncaughtExceptionHandler is called
 		// before the crash

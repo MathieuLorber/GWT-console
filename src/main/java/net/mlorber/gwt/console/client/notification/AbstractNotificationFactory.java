@@ -11,6 +11,7 @@ public abstract class AbstractNotificationFactory {
 		INFO, SUCCESS, WARNING, ERROR;
 	}
 
+	@Deprecated
 	public final void showNotification(String message, Level level) {
 		// TODO what is off ?
 		int logLevel = level.intValue();
