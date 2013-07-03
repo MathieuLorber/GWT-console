@@ -4,7 +4,6 @@ import java.util.Iterator;
 
 import net.mlorber.gwt.console.client.util.StyleHelper;
 
-
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasWidgets;

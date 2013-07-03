@@ -3,8 +3,8 @@ package net.mlorber.gwt.console.client;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import net.mlorber.gwt.console.client.notification.AbstractNotificationFactory;
-import net.mlorber.gwt.console.client.notification.AbstractNotificationFactory.MessageType;
+import net.mlorber.gwt.console.client.notification.NotificationFactory;
+import net.mlorber.gwt.console.client.notification.NotificationFactory.NotificationType;
 import net.mlorber.gwt.console.client.notification.SimpleNotificationFactory;
 import net.mlorber.gwt.console.client.util.StyleHelper;
 
@@ -68,7 +68,7 @@ public class Console {
 
 	private boolean autoScroll = true;
 
-	private AbstractNotificationFactory notificationFactory;
+	private NotificationFactory notificationFactory;
 
 	// FIXME i18n
 	private String unknownErrorMessage = "Unknown error : ";
@@ -205,7 +205,7 @@ public class Console {
 	// FIXME log uncaught en appel de méthode
 	// par défaut yes ?
 	// FIXME sortir notifier
-	public Console init(final Logger logger, Level notifyLevel, AbstractNotificationFactory notificationFactory) {
+	public Console init(final Logger logger, Level notifyLevel, NotificationFactory notificationFactory) {
 		this.logger = logger;
 		this.notificationFactory = notificationFactory;
 
@@ -289,12 +289,16 @@ public class Console {
 		}
 	}
 
-	public void showNotification(String message, MessageType messageType) {
-		showNotification(message, messageType, true);
+	public void showNotification(String message, NotificationType notificationType) {
+		showNotification(message, notificationType, true);
 	}
 
-	public void showNotification(String message, MessageType messageType, boolean autoHide) {
-		notificationFactory.showNotification(message, messageType, autoHide);
+	public void showNotification(String message, NotificationType notificationType, boolean autoHide) {
+		notificationFactory.showNotification(message, notificationType, autoHide);
+	}
+
+	public void showNotification(HTML html, NotificationType notificationType, boolean autoHide) {
+		notificationFactory.showNotification(html, notificationType, autoHide);
 	}
 
 	public FlowPanel getWidgetPanel() {

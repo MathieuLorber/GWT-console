@@ -11,12 +11,11 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 
-public class SimpleNotificationFactory extends AbstractNotificationFactory {
+public class SimpleNotificationFactory extends NotificationFactory {
 
-	private static final String CSS_CONTAINER = "position: fixed; height:0; width:600px; margin:auto; top: 30px;z-index: 1060;";
+	private static final String CSS_CONTAINER = "position: fixed; height:0; width:800px; margin:auto; top: 30px;z-index: 1060;";
 	private static String CSS_NOTIFICATION = "position: relative; width: 100%; margin: 2px; padding: 10px; border: 3px solid #fff;";
 	{
 		// FIXME missing browsers specific
@@ -53,14 +52,21 @@ public class SimpleNotificationFactory extends AbstractNotificationFactory {
 
 	// TODO a type ? warning / info... Do not use Level but for notif history
 	// FIXME fonction du Level
+	// FIXME pas là, plutot dans Console
+	// FIXME use SafeHTML
 	@Override
-	public void showNotification(String message, MessageType infoType, boolean autoHide) {
+	public void showNotification(String message, NotificationType type, boolean autoHide) {
+		showNotification(new HTML(message), type, autoHide);
+	}
+
+	@Override
+	public void showNotification(HTML html, NotificationType type, boolean autoHide) {
 		final FlowPanel notificationPanel = new FlowPanel();
-		notificationPanel.add(new Label(message));
+		notificationPanel.add(html);
 		container.add(notificationPanel);
 		// FIXME use class...
 		StyleHelper.addStyle(notificationPanel, CSS_NOTIFICATION);
-		switch (infoType) {
+		switch (type) {
 		case INFO:
 			StyleHelper.addStyle(notificationPanel, CSS_INFO);
 			break;
