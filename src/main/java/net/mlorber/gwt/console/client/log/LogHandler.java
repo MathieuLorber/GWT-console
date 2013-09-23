@@ -12,7 +12,8 @@ import com.google.gwt.user.client.ui.IsWidget;
 // FIXME extends HasWidgetsLogHandler pour le caca avec securityexception
 public class LogHandler extends HasWidgetsLogHandler {
 
-	private static final String CSS_SCROLLPANEL = "background: #eee;margin: 2px 2px 12px 2px;color: #000;";
+	private static final String CSS_SCROLLPANEL = "background: #eee; margin: 2px 2px 12px 2px;";
+	private static final String CSS_LOG_BLOC = "background: #fff; margin: 0 2px 0 2px; border-bottom: 1px solid #616161;";
 
 	private static final int DISCLOSURE_PANEL_MIN_HEIGHT = 100;
 	private static final int DISCLOSURE_PANEL_MIN_WIDTH = 100;
@@ -37,7 +38,9 @@ public class LogHandler extends HasWidgetsLogHandler {
 	// TODO prevoir les autres formatter... faire du super.publish
 	@Override
 	public void publish(LogRecord logRecord) {
-		container.add(new HTML(getFormatter().format(logRecord)));
+		HTML logBloc = new HTML(getFormatter().format(logRecord));
+		StyleHelper.addStyle(logBloc, CSS_LOG_BLOC);
+		container.add(logBloc);
 		if (autoScroll) {
 			scrollPanel.setVerticalScrollPosition(scrollPanel.getElement().getScrollHeight());
 		}
