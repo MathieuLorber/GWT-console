@@ -44,6 +44,7 @@ public class Console {
 
 	private ConsolePanel consolePanel;
 	private NotificationFactory notificationFactory;
+	private Button switchButton;
 
 	private LogHandler logHandler;
 
@@ -104,16 +105,21 @@ public class Console {
 		// }
 	}
 
-	public void addButton() {
-		Button switchButton = new Button("Console");
-		switchButton.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				toggleDisplay();
-			}
-		});
-		StyleHelper.addStyle(switchButton, CSS_SWITCH_BUTTON);
-		RootPanel.get().add(switchButton);
+	// TODO in sample !
+	public void toggleDisplaySwitchButton() {
+		if (switchButton == null) {
+			switchButton = new Button("Console");
+			switchButton.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					toggleDisplay();
+				}
+			});
+			StyleHelper.addStyle(switchButton, CSS_SWITCH_BUTTON);
+			RootPanel.get().add(switchButton);
+		} else {
+			switchButton.setVisible(!switchButton.isVisible());
+		}
 	}
 
 	public void registerShorcut() {
