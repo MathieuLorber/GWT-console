@@ -233,9 +233,9 @@ public class Console {
 
 		// FIXME methode pour specifier save dans cookie (ou autre)
 		// if (saveConfigurationInCookie) {
-		// configuration = new ConsoleConfiguration(CONFIG_COOKIE_NAME);
+		configuration = new ConsoleConfiguration(CONFIG_COOKIE_NAME);
 		// } else {
-		configuration = new ConsoleConfiguration();
+		// configuration = new ConsoleConfiguration();
 		// ConsoleConfiguration.clearCookie(CONFIG_COOKIE_NAME);
 		// }
 

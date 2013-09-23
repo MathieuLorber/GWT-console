@@ -27,6 +27,7 @@ class ConsoleConfiguration {
 	private int consoleHeight;
 	private int consoleWidth;
 
+	// FIXME quand meme mettre à la bonne taille, centrer...
 	public ConsoleConfiguration() {
 	}
 
