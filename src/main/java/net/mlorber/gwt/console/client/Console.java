@@ -94,6 +94,7 @@ public class Console {
 
 		StyleHelper.addStyle(widgetPanel, CSS_WIDGET_PANEL);
 		mainPanel.add(widgetPanel);
+		widgetPanel.setVisible(false);
 
 		StyleHelper.addStyle(widgetPanel, CSS_SCROLLPANEL);
 
@@ -305,8 +306,21 @@ public class Console {
 		notificationFactory.showNotification(html, notificationType, autoHide);
 	}
 
-	public FlowPanel getWidgetPanel() {
-		return widgetPanel;
+	// FIXME pourquoi initialement un getPanel ?
+	public void addWidget(Widget widget) {
+		widgetPanel.setVisible(true);
+		widgetPanel.add(widget);
+	}
+
+	public void removeWidget(Widget widget) {
+		widgetPanel.remove(widget);
+		if (widgetPanel.getWidgetCount() == 0) {
+			widgetPanel.setVisible(false);
+		}
+	}
+
+	public void removeWidget(int index) {
+		removeWidget(widgetPanel.getWidget(index));
 	}
 
 	public void log(String message) {

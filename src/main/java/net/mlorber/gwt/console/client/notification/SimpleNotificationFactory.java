@@ -21,8 +21,8 @@ public class SimpleNotificationFactory extends NotificationFactory {
 	private static String CSS_NOTIFICATION = "position: relative; width: 100%; margin: 2px; padding: 10px; border: 1px solid #fff;";
 	{
 		// FIXME missing browsers specific
-		 CSS_NOTIFICATION += "box-shadow: 0px 0px 5px #bbb; -moz-box-shadow: 0px 0px 5px #bbb; -webkit-box-shadow: 0px 0px 5px #bbb;";
-//		 CSS_NOTIFICATION += "border-radius: 2px; border-radius: 2px; -moz-border-radius: 2px; -webkit-border-radius: 2px;";
+		CSS_NOTIFICATION += "box-shadow: 0px 0px 5px #bbb; -moz-box-shadow: 0px 0px 5px #bbb; -webkit-box-shadow: 0px 0px 5px #bbb;";
+		// CSS_NOTIFICATION += "border-radius: 2px; border-radius: 2px; -moz-border-radius: 2px; -webkit-border-radius: 2px;";
 		// FIXME see anims
 		// CSS_NOTIFICATION +=
 		// "-webkit-transition: all 1s ease-in-out;-moz-transition: all 1s ease-in-out;-o-transition: all 1s ease-in-out;transition: all 1s ease-in-out;";
