@@ -3,6 +3,7 @@ package net.mlorber.gwt.console.client;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import net.mlorber.gwt.console.client.log.LogHandler;
 import net.mlorber.gwt.console.client.notification.NotificationFactory;
 import net.mlorber.gwt.console.client.notification.NotificationFactory.NotificationType;
 import net.mlorber.gwt.console.client.notification.SimpleNotificationFactory;
@@ -11,9 +12,6 @@ import net.mlorber.gwt.console.client.util.StyleHelper;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.event.dom.client.ScrollEvent;
-import com.google.gwt.event.dom.client.ScrollHandler;
-import com.google.gwt.logging.client.HasWidgetsLogHandler;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
@@ -48,29 +46,22 @@ public class Console {
 	private static final String CSS_CONSOLE = "background: #616161;color: #fff;z-index: " + CONSOLE_ZINDEX + ";border: 1px solid #fff;";
 	private static final String CSS_CONSOLE_TITLE = "font-size: 10px;padding-left: 5px;text-align: left;";
 	private static final String CSS_WIDGET_PANEL = "overflow: auto;";
-	private static final String CSS_SCROLLPANEL = "background: #eee;margin: 2px 2px 12px 2px;color: #000;";
 	private static final String CSS_RESIZE_IMAGE = "position: absolute;bottom: 4px;right: 4px;cursor:nw-resize;";
 	private static final String CSS_CLOSE_LABEL = "position: absolute;top: 0;right: 5px;cursor:pointer;";
 	private static final String CSS_SWITCH_BUTTON = "position: absolute;top: 0;right: 0;z-index: " + BUTTON_ZINDEX + ";";
 
 	private static final String CONFIG_COOKIE_NAME = "GWT-Console-conf";
 
-	private static final int DISCLOSURE_PANEL_MIN_HEIGHT = 100;
-	private static final int DISCLOSURE_PANEL_MIN_WIDTH = 100;
-
 	public static final int KEY_C = 67;
 
 	private static Console instance;
 
 	private PopupPanel popupContainerPanel = new PopupPanel();
-	private ScrollPanelWithMinSize scrollPanel = new ScrollPanelWithMinSize(DISCLOSURE_PANEL_MIN_HEIGHT, DISCLOSURE_PANEL_MIN_WIDTH);
 
 	private FlowPanel widgetPanel = new FlowPanel();
-	private LogPanel logPanel;
+	private LogHandler logHandler = new LogHandler(new FlowPanel());
 
 	private ConsoleConfiguration configuration;
-
-	private boolean autoScroll = true;
 
 	private NotificationFactory notificationFactory;
 
@@ -96,12 +87,7 @@ public class Console {
 		mainPanel.add(widgetPanel);
 		widgetPanel.setVisible(false);
 
-		StyleHelper.addStyle(widgetPanel, CSS_SCROLLPANEL);
-
-		StyleHelper.addStyle(scrollPanel, CSS_SCROLLPANEL);
-		initLogPanel();
-		scrollPanel.add(logPanel);
-		mainPanel.add(scrollPanel);
+		mainPanel.add(logHandler.getScrollPanel());
 
 		mainPanel.add(initResizeHandler());
 
@@ -135,15 +121,6 @@ public class Console {
 		return titleLabel;
 	}
 
-	private void initLogPanel() {
-		logPanel = new LogPanel() {
-			@Override
-			protected void widgetAdded() {
-				updateScrollPosition();
-			}
-		};
-	}
-
 	private Widget initResizeHandler() {
 		final Image resizeImage = new Image();
 		resizeImage.setUrl(RESIZE_IMAGE);
@@ -158,14 +135,14 @@ public class Console {
 
 			@Override
 			public void handleDrag(int absX, int absY) {
-				scrollPanel.incrementPixelSize(absX, absY);
-				widgetPanel.setWidth(scrollPanel.getOffsetWidth() + "px");
+				logHandler.getScrollPanel().incrementPixelSize(absX, absY);
+				widgetPanel.setWidth(logHandler.getScrollPanel().getOffsetWidth() + "px");
 			}
 
 			@Override
 			public void onMouseUp(MouseUpEvent event) {
 				super.onMouseUp(event);
-				configuration.saveSize(scrollPanel.getOffsetWidth(), scrollPanel.getOffsetHeight());
+				configuration.saveSize(logHandler.getScrollPanel().getOffsetWidth(), logHandler.getScrollPanel().getOffsetHeight());
 			}
 		};
 		return resizeImage;
@@ -185,18 +162,19 @@ public class Console {
 	}
 
 	private void initAutoScroll() {
-		scrollPanel.addScrollHandler(new ScrollHandler() {
-
-			@Override
-			public void onScroll(ScrollEvent event) {
-				// if (scrollPanel.getScrollPosition() ==
-				// scrollPanel.getElement().getScrollHeight()) {
-				// autoScroll = true;
-				// } else {
-				// autoScroll = false;
-				// }
-			}
-		});
+		// FIXME
+		// scrollPanel.addScrollHandler(new ScrollHandler() {
+		//
+		// @Override
+		// public void onScroll(ScrollEvent event) {
+		// // if (scrollPanel.getScrollPosition() ==
+		// // scrollPanel.getElement().getScrollHeight()) {
+		// // autoScroll = true;
+		// // } else {
+		// // autoScroll = false;
+		// // }
+		// }
+		// });
 	}
 
 	// TODO notifyLevel impl
@@ -215,7 +193,7 @@ public class Console {
 		this.notificationFactory = notificationFactory;
 
 		// TODO own HtmlLogFormatter ?
-		logger.addHandler(new HasWidgetsLogHandler(logPanel));
+		logger.addHandler(logHandler);
 		// logger.addHandler(new NotificationHandler(notificationFactory,
 		// notifyLevel));
 
@@ -272,7 +250,7 @@ public class Console {
 
 	private void initConfiguration() {
 		popupContainerPanel.setPopupPosition(configuration.getConsoleLeftPosition(), configuration.getConsoleTopPosition());
-		scrollPanel.setPixelSize(configuration.getConsoleWidth(), configuration.getConsoleHeight());
+		logHandler.getScrollPanel().setPixelSize(configuration.getConsoleWidth(), configuration.getConsoleHeight());
 		widgetPanel.setWidth(configuration.getConsoleWidth() + "px");
 		if (configuration.isShowConsole()) {
 			popupContainerPanel.show();
@@ -286,12 +264,6 @@ public class Console {
 			popupContainerPanel.hide();
 		}
 		configuration.saveShowConsole(popupContainerPanel.isShowing());
-	}
-
-	private void updateScrollPosition() {
-		if (autoScroll) {
-			scrollPanel.setVerticalScrollPosition(scrollPanel.getElement().getScrollHeight());
-		}
 	}
 
 	public void showNotification(String message, NotificationType notificationType) {
@@ -325,7 +297,8 @@ public class Console {
 
 	public void log(String message) {
 		// FIXME check XSS, SafeHtml.sanitize is sufficient ?
-		logPanel.add(new HTML(message));
+		// FIXME refaire quelque chose =)
+		// logHandler.add(new HTML(message));
 	}
 
 	public void logUncaughtException(Throwable e) {

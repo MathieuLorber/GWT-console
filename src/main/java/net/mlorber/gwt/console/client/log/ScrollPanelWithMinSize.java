@@ -1,8 +1,9 @@
-package net.mlorber.gwt.console.client;
+package net.mlorber.gwt.console.client.log;
 
 import com.google.gwt.user.client.ui.ScrollPanel;
 
-class ScrollPanelWithMinSize extends ScrollPanel {
+// FIXME pour pas public => code autrement handler resize dans la console
+public class ScrollPanelWithMinSize extends ScrollPanel {
 	private int minScrollPanelHeight;
 	private int minScrollPanelWidth;
 	private int scrollPanelHeight;
@@ -20,6 +21,7 @@ class ScrollPanelWithMinSize extends ScrollPanel {
 
 	@Override
 	public void setPixelSize(int width, int height) {
-		super.setPixelSize(scrollPanelWidth = Math.max(width, minScrollPanelWidth), scrollPanelHeight = Math.max(height, minScrollPanelHeight));
+		super.setPixelSize(scrollPanelWidth = Math.max(width, minScrollPanelWidth),
+				scrollPanelHeight = Math.max(height, minScrollPanelHeight));
 	}
 }
