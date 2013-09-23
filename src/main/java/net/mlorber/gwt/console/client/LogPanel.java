@@ -45,6 +45,7 @@ public abstract class LogPanel extends Composite implements HasWidgets {
 		if (panel.remove(widget)) {
 			return true;
 		}
+		// FIXME pour virer sous widget, mais code super pas bon
 		while (iterator().hasNext()) {
 			if (((FlowPanel) iterator().next()).getWidgetIndex(widget) != -1) {
 				return panel.remove(iterator().next());
