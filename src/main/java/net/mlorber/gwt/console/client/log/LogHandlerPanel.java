@@ -1,21 +1,48 @@
 package net.mlorber.gwt.console.client.log;
 
+import java.util.Iterator;
+
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.Widget;
 
-public class LogHandlerPanel extends Composite {
+public class LogHandlerPanel extends Composite implements HasWidgets {
 
-	// TODO centraliser ?
-	// tous les css et resources en base64
-	// ...
-	private static final String CSS_LOG_PANEL = "display: block;background: #fff;margin: 1px;border: 1px solid #ddd;";
+	// FIXME button et conf
+	private boolean autoScroll = true;
 
-	private FlowPanel panel = new FlowPanel();
+	private FlowPanel container = new FlowPanel();
 
-	public LogHandlerPanel() {
-		initWidget(panel);
+	private ScrollPanelWithMinSize scrollPanel;
+
+	// FIXME pas fou de passer le scrollPanel ?
+	public LogHandlerPanel(ScrollPanelWithMinSize scrollPanel) {
+		this.scrollPanel = scrollPanel;
+		initWidget(container);
 	}
 
-	// StyleHelper.addStyle(logPanel, CSS_LOG_PANEL);
+	@Override
+	public void add(Widget w) {
+		container.add(w);
+		if (autoScroll) {
+			scrollPanel.setVerticalScrollPosition(scrollPanel.getElement().getScrollHeight());
+		}
+	}
+
+	@Override
+	public void clear() {
+		container.clear();
+	}
+
+	@Override
+	public Iterator<Widget> iterator() {
+		return container.iterator();
+	}
+
+	@Override
+	public boolean remove(Widget w) {
+		return container.remove(w);
+	}
 
 }

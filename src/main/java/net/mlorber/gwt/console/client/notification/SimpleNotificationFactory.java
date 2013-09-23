@@ -1,6 +1,6 @@
 package net.mlorber.gwt.console.client.notification;
 
-import net.mlorber.gwt.console.client.Console;
+import net.mlorber.gwt.console.client.ConsolePanel;
 import net.mlorber.gwt.console.client.util.StyleHelper;
 
 import com.google.gwt.dom.client.Element;
@@ -17,7 +17,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 public class SimpleNotificationFactory extends NotificationFactory {
 
 	private static final String CSS_CONTAINER = "position: fixed; height:0; width:800px; margin:auto; top: 30px;z-index: "
-			+ Console.NOTIF_ZINDEX + ";";
+			+ ConsolePanel.NOTIF_ZINDEX + ";";
 	private static String CSS_NOTIFICATION = "position: relative; width: 100%; margin: 2px; padding: 10px; border: 1px solid #fff;";
 	{
 		// FIXME missing browsers specific

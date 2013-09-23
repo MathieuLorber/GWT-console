@@ -9,6 +9,7 @@ public class ScrollPanelWithMinSize extends ScrollPanel {
 	private int scrollPanelHeight;
 	private int scrollPanelWidth;
 
+	// FIXME ordre strange, width puis height
 	public ScrollPanelWithMinSize(int minScrollPanelHeight, int minScrollPanelWidth) {
 		super();
 		this.minScrollPanelHeight = minScrollPanelHeight;
