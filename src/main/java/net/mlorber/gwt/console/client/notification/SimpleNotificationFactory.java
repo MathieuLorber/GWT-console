@@ -16,6 +16,8 @@ import com.google.gwt.user.client.ui.RootPanel;
 
 public class SimpleNotificationFactory extends NotificationFactory {
 
+	// FIXME center + about close meme si autoclose notif
+
 	private static final String CSS_CONTAINER = "position: fixed; height:0; width:800px; margin:auto; top: 30px;z-index: "
 			+ ConsolePanel.NOTIF_ZINDEX + ";";
 	private static String CSS_NOTIFICATION = "position: relative; width: 100%; margin: 2px; padding: 10px; border: 1px solid #fff;";

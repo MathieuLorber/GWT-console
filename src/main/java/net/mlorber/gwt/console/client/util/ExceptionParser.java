@@ -4,6 +4,8 @@ import com.google.web.bindery.event.shared.UmbrellaException;
 
 // TODO it'a all about UmbrellaException
 // make something of this ?
+// FIXME extends UncaughtExceptionHandler ?
+// ou pas... n'apporte rien (?)
 public abstract class ExceptionParser {
 
 	// ATTENTION use com.google.web.bindery.event.shared.UmbrellaException and NOT
