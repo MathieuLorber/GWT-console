@@ -92,7 +92,8 @@ public class SimpleNotificationFactory extends NotificationFactory {
 				public void run() {
 					doHideElement(notificationPanel.getElement(), true);
 				}
-			}.schedule(3000);
+				// TODO sortir le temps
+			}.schedule(8000);
 		} else {
 			initCloseHandler(notificationPanel);
 		}

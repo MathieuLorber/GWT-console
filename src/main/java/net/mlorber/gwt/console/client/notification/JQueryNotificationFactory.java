@@ -20,6 +20,7 @@ public class JQueryNotificationFactory extends SimpleNotificationFactory {
 		}
 	}
 
+	// TODO sortir le temps
 	protected native void doFadeElement(Element element) /*-{
 		$wnd.$(element).fadeOut(2000);
 	}-*/;
