@@ -3,21 +3,18 @@ package net.mlorber.gwt.console.client;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import net.mlorber.gwt.console.client.log.LogHandler;
-import net.mlorber.gwt.console.client.notification.NotificationFactory;
-import net.mlorber.gwt.console.client.notification.NotificationFactory.NotificationType;
-import net.mlorber.gwt.console.client.notification.SimpleNotificationFactory;
-import net.mlorber.gwt.console.client.util.StyleHelper;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
+
+import net.mlorber.gwt.console.client.log.LogHandler;
+import net.mlorber.gwt.console.client.notification.NotificationFactory;
+import net.mlorber.gwt.console.client.notification.NotificationFactory.NotificationType;
+import net.mlorber.gwt.console.client.notification.SimpleNotificationFactory;
+import net.mlorber.gwt.console.client.util.StyleHelper;
 
 // TODO :
 // * choice of save in cookie at runtime

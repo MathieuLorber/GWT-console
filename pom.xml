@@ -7,11 +7,10 @@
 	<name>Console</name>
 
 	<properties>
-		<!-- minimal version for GWT logging -->
-		<gwt.version>2.5.0</gwt.version>
-		<gwt.plugin.version>2.4.0</gwt.plugin.version>
-		<maven.compiler.source>1.6</maven.compiler.source>
-		<maven.compiler.target>1.6</maven.compiler.target>
+		<gwt.version>2.7.0</gwt.version>
+		<gwt.plugin.version>2.7.0</gwt.plugin.version>
+		<maven.compiler.source>1.7</maven.compiler.source>
+		<maven.compiler.target>1.7</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
